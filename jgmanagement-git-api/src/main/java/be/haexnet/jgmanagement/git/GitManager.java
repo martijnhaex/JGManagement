@@ -5,9 +5,12 @@ import be.haexnet.jgmanagement.git.model.Project;
 import be.haexnet.jgmanagement.git.model.TestData;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revplot.PlotWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -58,11 +62,30 @@ public class GitManager {
     }
 
     private Function<Ref, Branch> createBranch(final Project project) {
-        return remote -> Branch.of(remote.getName().substring(remote.getName().lastIndexOf("/") + 1), null, null, project);
+        return remote ->
+                Branch.of(
+                        remote.getName().substring(remote.getName().lastIndexOf("/") + 1),
+                        getLastCommitOfBranch(project, remote.getObjectId()).orElse(null),
+                        null,
+                        project)
+                ;
+    }
+
+    private Optional<DateTime> getLastCommitOfBranch(final Project project, final ObjectId id) {
+        try {
+            final PlotWalk walk = new PlotWalk(getRepositoryForProject(project));
+            return Optional.of(
+                    new DateTime(walk.parseCommit(id).getCommitTime() * 1000L)
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
     private Predicate<Branch> isFeatureBranch(final Project project) {
-        return branch -> branch.getName().startsWith("feature") || branch.getName().startsWith(project.getName());
+        return branch ->
+                branch.getName().startsWith("feature") || branch.getName().startsWith(project.getName());
     }
 
     private Repository getRepositoryForProject(final Project project) throws IOException {
