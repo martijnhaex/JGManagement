@@ -2,7 +2,6 @@ package be.haexnet.jgmanagement.git;
 
 import be.haexnet.jgmanagement.git.model.Branch;
 import be.haexnet.jgmanagement.git.model.Project;
-import be.haexnet.jgmanagement.git.model.TestData;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -15,7 +14,6 @@ import org.joda.time.DateTime;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,14 +22,28 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.eclipse.jgit.api.ListBranchCommand.ListMode.REMOTE;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 public class GitManager {
-    public List<Branch> remoteBranches() {
-        final List<Branch> branches = new ArrayList<>();
+    private List<Project> projects;
+    private String baseBranch = "origin/develop";
 
-        Arrays.asList(TestData.values())
-                .stream()
-                .map(data -> getAllBranchesForProject(data.getProject()))
+    public GitManager withProjects(final List<Project> projects) {
+        this.projects = projects;
+        return this;
+    }
+
+    public GitManager withBaseBranch(final String baseBranch) {
+        this.baseBranch = baseBranch;
+        return this;
+    }
+
+    public List<Branch> remoteBranches() {
+        assertThat(projects).isNotEmpty();
+
+        final List<Branch> branches = new ArrayList<>();
+        projects.stream()
+                .map(project -> getAllBranchesForProject(project))
                 .forEach(branches::addAll);
 
         return branches;
@@ -92,7 +104,7 @@ public class GitManager {
             final Repository repository = getRepositoryForProject(project);
             final PlotWalk walk = new PlotWalk(repository);
 
-            final ObjectId developBranchId = repository.resolve("origin/develop");
+            final ObjectId developBranchId = repository.resolve(baseBranch);
 
             return walk.isMergedInto(
                     walk.lookupCommit(branchId),
