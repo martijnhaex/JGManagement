@@ -27,7 +27,7 @@ public class Branch {
         return lastCommit;
     }
 
-    public Boolean isMerged() {
+    public Boolean getMerged() {
         return merged;
     }
 

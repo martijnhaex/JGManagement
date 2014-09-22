@@ -14,9 +14,8 @@
     <properties>
         <jgit.version>3.4.1.201406201815-r</jgit.version>
         <joda-time.version>2.4</joda-time.version>
-        <fest-assert.version>1.4</fest-assert.version>
         <junit.version>4.11</junit.version>
-        <mockito.version>1.9.5</mockito.version>
+        <fest-assert-core.version>2.0M10</fest-assert-core.version>
     </properties>
 
     <dependencies>
@@ -29,6 +28,19 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${joda-time.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert-core</artifactId>
+            <version>${fest-assert-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

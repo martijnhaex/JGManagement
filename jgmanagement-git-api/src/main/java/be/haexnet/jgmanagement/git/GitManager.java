@@ -5,8 +5,10 @@ import be.haexnet.jgmanagement.git.model.Project;
 import be.haexnet.jgmanagement.git.model.TestData;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.internal.storage.file.FileRepository;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +53,11 @@ public class GitManager {
         );
     }
 
-    private FileRepository getRepositoryForProject(Project project) throws IOException {
-        return new FileRepository(project.getDirectoryLocation() + "/.git");
+    private Repository getRepositoryForProject(Project project) throws IOException {
+        return new FileRepositoryBuilder()
+                .setGitDir(new File(project.getDirectoryLocation() + "/.git"))
+                .readEnvironment()
+                .findGitDir()
+                .build();
     }
 }
