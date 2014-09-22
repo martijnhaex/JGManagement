@@ -16,10 +16,10 @@ public class GitManagerIntegrationTest {
     public void remoteBranches() throws Exception {
         final List<Branch> branches = manager.remoteBranches();
 
-        assertThat(branches).hasSize(5);
-        assertThat(extractProperty("name").from(branches)).containsOnly("refs/remotes/origin/develop", "refs/remotes/origin/feature-other-project", "refs/remotes/origin/master", "refs/remotes/origin/develop", "refs/remotes/origin/master");
+        assertThat(branches).hasSize(1);
+        assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project");
         assertThat(extractProperty("lastCommit").from(branches)).containsNull();
         assertThat(extractProperty("merged").from(branches)).containsNull();
-        assertThat(extractProperty("project").from(branches)).containsOnly(TestData.SSH.getProject(), TestData.GIT_JIRA.getProject());
+        assertThat(extractProperty("project").from(branches)).containsOnly(TestData.SSH.getProject());
     }
 }

@@ -5,6 +5,7 @@ import be.haexnet.jgmanagement.git.model.Project;
 import be.haexnet.jgmanagement.git.model.TestData;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.eclipse.jgit.api.ListBranchCommand.ListMode.REMOTE;
@@ -37,7 +40,8 @@ public class GitManager {
                     .setListMode(REMOTE)
                     .call()
                     .stream()
-                    .map(remote -> Branch.of(remote.getName(), null, null, project))
+                    .map(createBranch(project))
+                    .filter(isFeatureBranch(project))
                     .collect(Collectors.toList());
         } catch (GitAPIException | IOException e) {
             e.printStackTrace();
@@ -53,7 +57,15 @@ public class GitManager {
         );
     }
 
-    private Repository getRepositoryForProject(Project project) throws IOException {
+    private Function<Ref, Branch> createBranch(final Project project) {
+        return remote -> Branch.of(remote.getName().substring(remote.getName().lastIndexOf("/") + 1), null, null, project);
+    }
+
+    private Predicate<Branch> isFeatureBranch(final Project project) {
+        return branch -> branch.getName().startsWith("feature") || branch.getName().startsWith(project.getName());
+    }
+
+    private Repository getRepositoryForProject(final Project project) throws IOException {
         return new FileRepositoryBuilder()
                 .setGitDir(new File(project.getDirectoryLocation() + "/.git"))
                 .readEnvironment()
