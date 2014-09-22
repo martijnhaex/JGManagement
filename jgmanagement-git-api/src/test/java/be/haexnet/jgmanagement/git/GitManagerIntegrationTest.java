@@ -17,13 +17,13 @@ public class GitManagerIntegrationTest {
     GitManager manager = new GitManager();
 
     @Test(expected = AssertionError.class)
-    public void remoteBranchesNoProjectsOrBaseBranch() throws Exception {
-        manager.remoteBranches();
+    public void showNoProjectsOrBaseBranch() throws Exception {
+        manager.show();
     }
 
     @Test
-    public void remoteBranchesWithProjectsNoBaseBranch() throws Exception {
-        final List<Branch> branches = manager.withProjects(PROJECTS).remoteBranches();
+    public void showBranchesWithProjectsNoBaseBranch() throws Exception {
+        final List<Branch> branches = manager.withProjects(PROJECTS).show();
 
         assertThat(branches).hasSize(1);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project");
@@ -33,8 +33,8 @@ public class GitManagerIntegrationTest {
     }
 
     @Test
-    public void remoteBranchesWithProjectsAndBaseBranch() throws Exception {
-        final List<Branch> branches = manager.withProjects(PROJECTS).withBaseBranch("origin/master").remoteBranches();
+    public void showWithProjectsAndBaseBranch() throws Exception {
+        final List<Branch> branches = manager.withProjects(PROJECTS).withBaseBranch("origin/master").show();
 
         assertThat(branches).hasSize(1);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project");

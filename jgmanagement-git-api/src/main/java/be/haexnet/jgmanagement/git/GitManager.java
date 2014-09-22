@@ -38,7 +38,7 @@ public class GitManager {
         return this;
     }
 
-    public List<Branch> remoteBranches() {
+    public List<Branch> show() {
         assertThat(projects).isNotEmpty();
 
         final List<Branch> branches = new ArrayList<>();
