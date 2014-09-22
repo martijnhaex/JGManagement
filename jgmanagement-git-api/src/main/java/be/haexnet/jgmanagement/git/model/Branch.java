@@ -6,6 +6,7 @@ public class Branch {
     private final String name;
     private final DateTime lastCommit;
     private final Boolean merged;
+
     private final Project project;
 
     private Branch(String name, DateTime lastCommit, Boolean merged, Project project) {
