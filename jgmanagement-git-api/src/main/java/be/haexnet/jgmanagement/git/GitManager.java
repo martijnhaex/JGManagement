@@ -62,24 +62,45 @@ public class GitManager {
     }
 
     private Function<Ref, Branch> createBranch(final Project project) {
-        return remote ->
-                Branch.of(
-                        remote.getName().substring(remote.getName().lastIndexOf("/") + 1),
-                        getLastCommitOfBranch(project, remote.getObjectId()).orElse(null),
-                        null,
-                        project)
-                ;
+        return remote -> {
+            final ObjectId remoteBranchId = remote.getObjectId();
+            final String remoteBranchName = remote.getName();
+
+            return Branch.of(
+                    remoteBranchName.substring(remoteBranchName.lastIndexOf("/") + 1),
+                    getLastCommitOfBranch(project, remoteBranchId).orElse(null),
+                    isBranchMerged(project, remoteBranchId),
+                    project);
+        };
     }
 
-    private Optional<DateTime> getLastCommitOfBranch(final Project project, final ObjectId id) {
+    private Optional<DateTime> getLastCommitOfBranch(final Project project, final ObjectId branchId) {
         try {
             final PlotWalk walk = new PlotWalk(getRepositoryForProject(project));
             return Optional.of(
-                    new DateTime(walk.parseCommit(id).getCommitTime() * 1000L)
+                    new DateTime(walk.parseCommit(branchId).getCommitTime() * 1000L)
             );
         } catch (IOException e) {
             e.printStackTrace();
             return Optional.empty();
+        }
+    }
+
+    private Boolean isBranchMerged(final Project project, final ObjectId branchId) {
+        //TODO make generic to say in which branch is merged!
+        try {
+            final Repository repository = getRepositoryForProject(project);
+            final PlotWalk walk = new PlotWalk(repository);
+
+            final ObjectId developBranchId = repository.resolve("origin/develop");
+
+            return walk.isMergedInto(
+                    walk.lookupCommit(branchId),
+                    walk.lookupCommit(developBranchId)
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

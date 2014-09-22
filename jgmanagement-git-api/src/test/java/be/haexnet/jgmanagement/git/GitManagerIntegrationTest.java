@@ -19,8 +19,8 @@ public class GitManagerIntegrationTest {
 
         assertThat(branches).hasSize(1);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project");
-        assertThat(extractProperty("lastCommit").from(branches)).containsOnly(new DateTime(2014, 9, 19, 11, 48, 7));
-        assertThat(extractProperty("merged").from(branches)).containsNull();
+        assertThat(extractProperty("lastCommit").from(branches)).containsOnly(new DateTime(2014, 9, 22, 9, 44, 57));
+        assertThat(extractProperty("merged").from(branches)).containsOnly(false);
         assertThat(extractProperty("project").from(branches)).containsOnly(TestData.SSH.getProject());
     }
 }
