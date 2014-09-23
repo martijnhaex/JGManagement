@@ -1,5 +1,6 @@
 package be.haexnet.jgmanagement.git;
 
+import be.haexnet.jgmanagement.git.model.BaseBranch;
 import be.haexnet.jgmanagement.git.model.Branch;
 import be.haexnet.jgmanagement.git.model.BranchType;
 import be.haexnet.jgmanagement.git.model.Project;
@@ -12,7 +13,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 public class GitManager {
     private List<Project> projects;
-    private String baseBranch = "origin/develop";
+    private BaseBranch baseBranch = BaseBranch.DEVELOP;
     private List<BranchType> types = new ArrayList<>();
 
     public GitManager withProjects(final List<Project> projects) {
@@ -20,7 +21,7 @@ public class GitManager {
         return this;
     }
 
-    public GitManager withBaseBranch(final String baseBranch) {
+    public GitManager withBaseBranch(final BaseBranch baseBranch) {
         this.baseBranch = baseBranch;
         return this;
     }

@@ -1,6 +1,7 @@
 package be.haexnet.jgmanagement.git;
 
 import be.haexnet.jgmanagement.git.fixture.ProjectFixture;
+import be.haexnet.jgmanagement.git.model.BaseBranch;
 import be.haexnet.jgmanagement.git.model.Branch;
 import be.haexnet.jgmanagement.git.model.BranchType;
 import be.haexnet.jgmanagement.git.model.Project;
@@ -41,7 +42,7 @@ public class GitManagerIntegrationTest {
 
     @Test
     public void showWithProjectsAndBaseBranch() throws Exception {
-        final List<Branch> branches = manager.withProjects(PROJECTS).withBaseBranch("origin/master").withRemoteBranches().show();
+        final List<Branch> branches = manager.withProjects(PROJECTS).withBaseBranch(BaseBranch.MASTER).withRemoteBranches().show();
 
         assertThat(branches).hasSize(1);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project");

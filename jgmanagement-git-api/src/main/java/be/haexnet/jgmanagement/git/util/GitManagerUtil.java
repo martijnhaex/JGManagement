@@ -1,5 +1,6 @@
 package be.haexnet.jgmanagement.git.util;
 
+import be.haexnet.jgmanagement.git.model.BaseBranch;
 import be.haexnet.jgmanagement.git.model.Branch;
 import be.haexnet.jgmanagement.git.model.BranchType;
 import be.haexnet.jgmanagement.git.model.BranchTypeReference;
@@ -23,11 +24,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class GitManagerUtil {
-    public static Function<Project, List<Branch>> getBranches(final List<BranchType> types, final String baseBranch) {
+    public static Function<Project, List<Branch>> getBranches(final List<BranchType> types, final BaseBranch baseBranch) {
         return project -> getBranches(project, types, baseBranch);
     }
 
-    private static List<Branch> getBranches(final Project project, final List<BranchType> types, final String baseBranch) {
+    private static List<Branch> getBranches(final Project project, final List<BranchType> types, final BaseBranch baseBranch) {
         final List<Branch> branches = new ArrayList<>();
         types.stream()
                 .map(getReferences(project))
@@ -48,7 +49,7 @@ public class GitManagerUtil {
         };
     }
 
-    private static Function<BranchTypeReference, List<Branch>> createBranches(final Project project, final String baseBranch) {
+    private static Function<BranchTypeReference, List<Branch>> createBranches(final Project project, final BaseBranch baseBranch) {
         return typeReference -> {
             final Map<String, Ref> references = typeReference.getReferences();
 
@@ -69,7 +70,7 @@ public class GitManagerUtil {
                 .build();
     }
 
-    private static Function<Ref, Branch> createBranch(final Project project, final BranchType type, final String baseBranch) {
+    private static Function<Ref, Branch> createBranch(final Project project, final BranchType type, final BaseBranch baseBranch) {
         return remote -> {
             final ObjectId remoteBranchId = remote.getObjectId();
             final String remoteBranchName = remote.getName();
@@ -96,12 +97,12 @@ public class GitManagerUtil {
         }
     }
 
-    private static Boolean isBranchMerged(final Project project, final ObjectId branchId, final String baseBranch) {
+    private static Boolean isBranchMerged(final Project project, final ObjectId branchId, final BaseBranch baseBranch) {
         try {
             final Repository repository = getRepositoryForProject(project);
             final PlotWalk walk = new PlotWalk(repository);
 
-            final ObjectId developBranchId = repository.resolve(baseBranch);
+            final ObjectId developBranchId = repository.resolve(baseBranch.getFullyQualifiedName());
 
             return walk.isMergedInto(
                     walk.lookupCommit(branchId),
