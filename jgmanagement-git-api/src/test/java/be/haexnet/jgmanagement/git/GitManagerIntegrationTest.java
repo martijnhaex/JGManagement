@@ -2,6 +2,7 @@ package be.haexnet.jgmanagement.git;
 
 import be.haexnet.jgmanagement.git.fixture.ProjectFixture;
 import be.haexnet.jgmanagement.git.model.Branch;
+import be.haexnet.jgmanagement.git.model.BranchType;
 import be.haexnet.jgmanagement.git.model.Project;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -35,6 +36,7 @@ public class GitManagerIntegrationTest {
         assertThat(extractProperty("lastCommit").from(branches)).containsOnly(new DateTime(2014, 9, 22, 9, 44, 57));
         assertThat(extractProperty("merged").from(branches)).containsOnly(false);
         assertThat(extractProperty("project").from(branches)).containsOnly(ProjectFixture.SSH());
+        assertThat(extractProperty("type").from(branches)).containsOnly(BranchType.REMOTE);
     }
 
     @Test
@@ -46,6 +48,7 @@ public class GitManagerIntegrationTest {
         assertThat(extractProperty("lastCommit").from(branches)).containsOnly(new DateTime(2014, 9, 22, 9, 44, 57));
         assertThat(extractProperty("merged").from(branches)).containsOnly(false);
         assertThat(extractProperty("project").from(branches)).containsOnly(ProjectFixture.SSH());
+        assertThat(extractProperty("type").from(branches)).containsOnly(BranchType.REMOTE);
     }
 
     @Test
@@ -57,6 +60,7 @@ public class GitManagerIntegrationTest {
         assertThat(extractProperty("lastCommit").from(branches)).containsOnly(new DateTime(2014, 9, 22, 9, 44, 57), new DateTime(2014, 9, 22, 17, 8, 26));
         assertThat(extractProperty("merged").from(branches)).containsOnly(true, false);
         assertThat(extractProperty("project").from(branches)).containsOnly(ProjectFixture.SSH(), ProjectFixture.JIRA_GIT());
+        assertThat(extractProperty("type").from(branches)).containsOnly(BranchType.LOCAL);
     }
 
     @Test
@@ -68,5 +72,6 @@ public class GitManagerIntegrationTest {
         assertThat(extractProperty("lastCommit").from(branches)).containsOnly(new DateTime(2014, 9, 22, 9, 44, 57), new DateTime(2014, 9, 22, 17, 8, 26));
         assertThat(extractProperty("merged").from(branches)).containsOnly(false, true);
         assertThat(extractProperty("project").from(branches)).containsOnly(ProjectFixture.SSH(), ProjectFixture.JIRA_GIT());
+        assertThat(extractProperty("type").from(branches)).containsOnly(BranchType.REMOTE, BranchType.LOCAL);
     }
 }

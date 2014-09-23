@@ -2,6 +2,7 @@ package be.haexnet.jgmanagement.git.util;
 
 import be.haexnet.jgmanagement.git.model.Branch;
 import be.haexnet.jgmanagement.git.model.BranchType;
+import be.haexnet.jgmanagement.git.model.BranchTypeReference;
 import be.haexnet.jgmanagement.git.model.Project;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
@@ -35,24 +36,29 @@ public class GitManagerUtil {
         return branches;
     }
 
-    private static Function<BranchType, Map<String, Ref>> getReferences(final Project project) {
-        return reference -> {
+    private static Function<BranchType, BranchTypeReference> getReferences(final Project project) {
+        return type -> {
             Map<String, Ref> references = Collections.emptyMap();
             try {
-                references = getRepositoryForProject(project).getRefDatabase().getRefs(reference.getRef());
+                references = getRepositoryForProject(project).getRefDatabase().getRefs(type.getRef());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return references;
+            return BranchTypeReference.of(type, references);
         };
     }
 
-    private static Function<Map<String, Ref>, List<Branch>> createBranches(final Project project, final String baseBranch) {
-        return referenceMap -> referenceMap.keySet().stream()
-                .map(referenceMap::get)
-                .map(createBranch(project, baseBranch))
-                .filter(isFeatureBranch(project))
-                .collect(Collectors.toList());
+    private static Function<BranchTypeReference, List<Branch>> createBranches(final Project project, final String baseBranch) {
+        return typeReference -> {
+            final Map<String, Ref> references = typeReference.getReferences();
+
+            return references.keySet()
+                    .stream()
+                    .map(references::get)
+                    .map(createBranch(project, typeReference.getType(), baseBranch))
+                    .filter(isFeatureBranch(project))
+                    .collect(Collectors.toList());
+        };
     }
 
     private static Repository getRepositoryForProject(final Project project) throws IOException {
@@ -63,7 +69,7 @@ public class GitManagerUtil {
                 .build();
     }
 
-    private static Function<Ref, Branch> createBranch(final Project project, final String baseBranch) {
+    private static Function<Ref, Branch> createBranch(final Project project, final BranchType type, final String baseBranch) {
         return remote -> {
             final ObjectId remoteBranchId = remote.getObjectId();
             final String remoteBranchName = remote.getName();
@@ -72,7 +78,9 @@ public class GitManagerUtil {
                     remoteBranchName.substring(remoteBranchName.lastIndexOf("/") + 1),
                     getLastCommitOfBranch(project, remoteBranchId).orElse(null),
                     isBranchMerged(project, remoteBranchId, baseBranch),
-                    project);
+                    project,
+                    type
+            );
         };
     }
 
