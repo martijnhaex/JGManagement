@@ -22,25 +22,24 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class GitManagerUtil {
-    public static Function<Project, List<Branch>> getBranches(final BranchType type, final String baseBranch) {
-        return project -> getBranches(project, type, baseBranch);
+    public static Function<Project, List<Branch>> getBranches(final List<BranchType> types, final String baseBranch) {
+        return project -> getBranches(project, types, baseBranch);
     }
 
-    private static List<Branch> getBranches(final Project project, final BranchType type, final String baseBranch) {
+    private static List<Branch> getBranches(final Project project, final List<BranchType> types, final String baseBranch) {
         final List<Branch> branches = new ArrayList<>();
-        type.getRefs()
-                .stream()
+        types.stream()
                 .map(getReferences(project))
                 .map(createBranches(project, baseBranch))
                 .forEach(branches::addAll);
         return branches;
     }
 
-    private static Function<String, Map<String, Ref>> getReferences(final Project project) {
+    private static Function<BranchType, Map<String, Ref>> getReferences(final Project project) {
         return reference -> {
             Map<String, Ref> references = Collections.emptyMap();
             try {
-                references = getRepositoryForProject(project).getRefDatabase().getRefs(reference);
+                references = getRepositoryForProject(project).getRefDatabase().getRefs(reference.getRef());
             } catch (IOException e) {
                 e.printStackTrace();
             }
