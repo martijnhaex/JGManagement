@@ -6,7 +6,9 @@ import be.haexnet.jgmanagement.git.model.Branch;
 import be.haexnet.jgmanagement.git.model.BranchType;
 import be.haexnet.jgmanagement.git.model.Project;
 import org.joda.time.DateTime;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.List;
 
@@ -17,13 +19,22 @@ import static org.fest.assertions.api.Assertions.extractProperty;
 public class GitManagerIntegrationTest {
     static final List<Project> PROJECTS = ProjectFixture.LIST();
 
-    @Test(expected = AssertionError.class)
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none().handleAssertionErrors();
+
+    @Test
     public void showNoProjectsOrBaseBranch() throws Exception {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Cannot call GIT, please set the project (GIT repositories) to monitor first.");
+
         manageGit().show();
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void showNoBranchType() {
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Cannot call GIT, please set the branch types (LOCAL and/or REMOTE) first.");
+
         manageGit().withProjects(PROJECTS).show();
     }
 

@@ -43,8 +43,8 @@ public class GitManager {
     }
 
     public List<Branch> show() {
-        assertThat(projects).isNotEmpty();
-        assertThat(types).isNotEmpty();
+        assertThat(projects).overridingErrorMessage("Cannot call GIT, please set the project (GIT repositories) to monitor first.").isNotEmpty();
+        assertThat(types).overridingErrorMessage("Cannot call GIT, please set the branch types (LOCAL and/or REMOTE) first.").isNotEmpty();
 
         final List<Branch> branches = new ArrayList<>();
         projects.stream()
