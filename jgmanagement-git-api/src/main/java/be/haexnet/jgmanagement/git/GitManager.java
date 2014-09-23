@@ -16,6 +16,12 @@ public class GitManager {
     private BaseBranch baseBranch = BaseBranch.DEVELOP;
     private List<BranchType> types = new ArrayList<>();
 
+    private GitManager() { }
+
+    public static GitManager manageGit() {
+        return new GitManager();
+    }
+
     public GitManager withProjects(final List<Project> projects) {
         this.projects = projects;
         return this;

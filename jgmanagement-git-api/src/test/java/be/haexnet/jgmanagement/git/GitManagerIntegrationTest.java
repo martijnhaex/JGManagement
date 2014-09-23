@@ -10,27 +10,26 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static be.haexnet.jgmanagement.git.GitManager.manageGit;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.extractProperty;
 
 public class GitManagerIntegrationTest {
     static final List<Project> PROJECTS = ProjectFixture.LIST();
 
-    GitManager manager = new GitManager();
-
     @Test(expected = AssertionError.class)
     public void showNoProjectsOrBaseBranch() throws Exception {
-        manager.show();
+        manageGit().show();
     }
 
     @Test(expected = AssertionError.class)
     public void showNoBranchType() {
-        manager.withProjects(PROJECTS).show();
+        manageGit().withProjects(PROJECTS).show();
     }
 
     @Test
     public void showBranchesWithProjectsNoBaseBranch() throws Exception {
-        final List<Branch> branches = manager.withProjects(PROJECTS).withRemoteBranches().show();
+        final List<Branch> branches = manageGit().withProjects(PROJECTS).withRemoteBranches().show();
 
         assertThat(branches).hasSize(1);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project");
@@ -42,7 +41,7 @@ public class GitManagerIntegrationTest {
 
     @Test
     public void showWithProjectsAndBaseBranch() throws Exception {
-        final List<Branch> branches = manager.withProjects(PROJECTS).withBaseBranch(BaseBranch.MASTER).withRemoteBranches().show();
+        final List<Branch> branches = manageGit().withProjects(PROJECTS).withBaseBranch(BaseBranch.MASTER).withRemoteBranches().show();
 
         assertThat(branches).hasSize(1);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project");
@@ -54,7 +53,7 @@ public class GitManagerIntegrationTest {
 
     @Test
     public void showLocalBranches() throws Exception {
-        final List<Branch> branches = manager.withProjects(PROJECTS).withLocalBranches().show();
+        final List<Branch> branches = manageGit().withProjects(PROJECTS).withLocalBranches().show();
 
         assertThat(branches).hasSize(2);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project", "feature-only-local");
@@ -66,7 +65,7 @@ public class GitManagerIntegrationTest {
 
     @Test
     public void showAllBranches() throws Exception {
-        final List<Branch> branches = manager.withProjects(PROJECTS).withLocalBranches().withRemoteBranches().show();
+        final List<Branch> branches = manageGit().withProjects(PROJECTS).withLocalBranches().withRemoteBranches().show();
 
         assertThat(branches).hasSize(3);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project", "feature-only-local");
