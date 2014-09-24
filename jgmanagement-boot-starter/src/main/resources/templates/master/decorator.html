@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=no" id="Viewport" name="viewport"/>
+
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="http://spring.io/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="http://spring.io/css/blog.css"/>
+
+    <title>GIT and JIRA Management</title>
+
+    <div layout-fragment="header"></div>
+</head>
+<body>
+<div class="viewport">
+    <header th:include="master/menu :: header" class="navbar header--navbar desktop-only"/>
+    <div class="header--container"></div>
+    <div class="container-fluid"></div>
+    <div class="body--container container-fluid">
+        <div class="main-body--wrapper">
+            <div class="blog--container">
+                <div class="meta-data--container">
+                    <article class="blog--post">
+                        <div layout:fragment="main-content"></div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
