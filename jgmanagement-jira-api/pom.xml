@@ -9,18 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jgmanagement-git-api</artifactId>
-
-    <properties>
-        <jgit.version>3.4.1.201406201815-r</jgit.version>
-    </properties>
+    <artifactId>jgmanagement-jira-api</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>${jgit.version}</version>
-        </dependency>
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
@@ -37,5 +28,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>
