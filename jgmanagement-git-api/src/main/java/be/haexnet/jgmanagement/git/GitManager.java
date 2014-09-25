@@ -42,7 +42,7 @@ public class GitManager {
         return this;
     }
 
-    public List<Branch> show() {
+    public List<Branch> showBranches() {
         assertThat(projects).overridingErrorMessage("Cannot call GIT, please set the project (GIT repositories) to monitor first.").isNotEmpty();
         assertThat(types).overridingErrorMessage("Cannot call GIT, please set the branch types (LOCAL and/or REMOTE) first.").isNotEmpty();
 

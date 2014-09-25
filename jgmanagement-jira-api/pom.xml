@@ -9,17 +9,27 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jgmanagement-git-api</artifactId>
+    <artifactId>jgmanagement-jira-api</artifactId>
 
     <properties>
-        <jgit.version>3.4.1.201406201815-r</jgit.version>
+        <commons-logging.version>1.2</commons-logging.version>
+        <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>${jgit.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${commons-logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson-mapper-asl.version}</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -37,5 +47,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>

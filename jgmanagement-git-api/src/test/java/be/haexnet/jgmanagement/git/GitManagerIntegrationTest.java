@@ -27,7 +27,7 @@ public class GitManagerIntegrationTest {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Cannot call GIT, please set the project (GIT repositories) to monitor first.");
 
-        manageGit().show();
+        manageGit().showBranches();
     }
 
     @Test
@@ -35,12 +35,12 @@ public class GitManagerIntegrationTest {
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage("Cannot call GIT, please set the branch types (LOCAL and/or REMOTE) first.");
 
-        manageGit().withProjects(PROJECTS).show();
+        manageGit().withProjects(PROJECTS).showBranches();
     }
 
     @Test
     public void showBranchesWithProjectsNoBaseBranch() throws Exception {
-        final List<Branch> branches = manageGit().withProjects(PROJECTS).withRemoteBranches().show();
+        final List<Branch> branches = manageGit().withProjects(PROJECTS).withRemoteBranches().showBranches();
 
         assertThat(branches).hasSize(1);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project");
@@ -52,7 +52,7 @@ public class GitManagerIntegrationTest {
 
     @Test
     public void showWithProjectsAndBaseBranch() throws Exception {
-        final List<Branch> branches = manageGit().withProjects(PROJECTS).withBaseBranch(BaseBranch.MASTER).withRemoteBranches().show();
+        final List<Branch> branches = manageGit().withProjects(PROJECTS).withBaseBranch(BaseBranch.MASTER).withRemoteBranches().showBranches();
 
         assertThat(branches).hasSize(1);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project");
@@ -64,7 +64,7 @@ public class GitManagerIntegrationTest {
 
     @Test
     public void showLocalBranches() throws Exception {
-        final List<Branch> branches = manageGit().withProjects(PROJECTS).withLocalBranches().show();
+        final List<Branch> branches = manageGit().withProjects(PROJECTS).withLocalBranches().showBranches();
 
         assertThat(branches).hasSize(2);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project", "feature-only-local");
@@ -76,7 +76,7 @@ public class GitManagerIntegrationTest {
 
     @Test
     public void showAllBranches() throws Exception {
-        final List<Branch> branches = manageGit().withProjects(PROJECTS).withLocalBranches().withRemoteBranches().show();
+        final List<Branch> branches = manageGit().withProjects(PROJECTS).withLocalBranches().withRemoteBranches().showBranches();
 
         assertThat(branches).hasSize(3);
         assertThat(extractProperty("name").from(branches)).containsOnly("feature-other-project", "feature-only-local");
