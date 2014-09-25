@@ -1,7 +1,9 @@
 package be.haexnet.jgmanagement.jira;
 
+import be.haexnet.jgmanagement.jira.model.Credential;
 import be.haexnet.jgmanagement.jira.model.Issue;
 
+import static be.haexnet.jgmanagement.jira.builder.CredentialBuilder.credential;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class JiraManager {
@@ -32,10 +34,9 @@ public class JiraManager {
     }
 
     public Issue showIssue(final String issueKey) {
-        assertThat(username).overridingErrorMessage("Cannot call JIRA, please set your username first.").isNotEmpty();
-        assertThat(password).overridingErrorMessage("Cannot call JIRA, please set your password first.").isNotEmpty();
-        assertThat(url).overridingErrorMessage("Cannot call JIRA, please set the URL of JIRA first.").isNotEmpty();
         assertThat(issueKey).overridingErrorMessage("Cannot call JIRA, please set the issue key first.").isNotEmpty();
+
+        final Credential credential = credential().withUsername(username).withPassword(password).withUrl(url).create();
 
         //TODO do call!
         return null;
