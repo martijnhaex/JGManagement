@@ -1,12 +1,16 @@
 package be.haexnet.jgmanagement.jira;
 
+import be.haexnet.jgmanagement.jira.api.JiraManagerUtil;
+import be.haexnet.jgmanagement.jira.api.model.Issue;
 import be.haexnet.jgmanagement.jira.model.Credential;
-import be.haexnet.jgmanagement.jira.model.Issue;
+import be.haexnet.jgmanagement.jira.model.Ticket;
+import be.haexnet.jgmanagement.jira.model.mapper.TicketMapper;
 
 import static be.haexnet.jgmanagement.jira.builder.CredentialBuilder.credential;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class JiraManager {
+    private boolean authorize;
     private String username;
     private String password;
     private String url;
@@ -18,13 +22,10 @@ public class JiraManager {
         return new JiraManager();
     }
 
-    public JiraManager withUsername(final String username) {
+    public JiraManager withAuthorization(final String username, final String password) {
         this.username = username;
-        return this;
-    }
-
-    public JiraManager withPassword(final String password) {
         this.password = password;
+        this.authorize = true;
         return this;
     }
 
@@ -33,12 +34,22 @@ public class JiraManager {
         return this;
     }
 
-    public Issue showIssue(final String issueKey) {
+    public Ticket showIssue(final String issueKey) {
         assertThat(issueKey).overridingErrorMessage("Cannot call JIRA, please set the issue key first.").isNotEmpty();
 
-        final Credential credential = credential().withUsername(username).withPassword(password).withUrl(url).create();
+        return new TicketMapper().map(
+                getIssue(issueKey)
+        );
+    }
 
-        //TODO do call!
-        return null;
+    private Issue getIssue(String issueKey) {
+        return JiraManagerUtil.getIssue(
+                createCredential(),
+                issueKey
+        );
+    }
+
+    private Credential createCredential() {
+        return credential().withUsername(username).withPassword(password).withUrl(url).withAuthorization(authorize).create();
     }
 }
